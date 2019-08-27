@@ -1,0 +1,23 @@
+{
+  "name": "sakura",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fdistor/sakura.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fdistor/sakura/issues"
+  },
+  "homepage": "https://github.com/fdistor/sakura#readme",
+  "devDependencies": {
+    "threads": "^1.0.0-beta.4"
+  }
+}
