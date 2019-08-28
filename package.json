@@ -6,7 +6,7 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"data": "node data/script/generate.js",
-		"start": "node --experimental-worker main.js"
+		"start": "node --experimental-worker src/main.js"
 	},
 	"repository": {
 		"type": "git",
