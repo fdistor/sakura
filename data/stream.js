@@ -17,12 +17,6 @@ function* stream() {
 
 // const counterIterator = stream();
 
-// const logIterator = iterator => {
-//   for (const item of iterator) {
-//     console.log('writing:', item);
-//   }
-// };
-
 // logIterator(counterIterator);
 
 module.exports = {
