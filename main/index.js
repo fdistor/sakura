@@ -11,8 +11,11 @@ const run = async () => {
   // console.log(pool.workers);
 
   while (count) {
+    console.log(count, 'index.js');
     const data = stream.data();
-    const result = await pool.doWork(data);
+    const array = data.split(' ');
+    const result = await pool.work(array);
+    console.log(result, 'index.js');
     count--;
   }
 };

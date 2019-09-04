@@ -8,6 +8,7 @@ module.exports = class Pool {
     this.workingWorkers = size;
     this.start = null;
     this.wrappedWorker = new Wrapper(workerPath);
+    this.finished = [];
 
     this.addWorkers(size);
   }
@@ -42,17 +43,25 @@ module.exports = class Pool {
   }
 
   work(array) {
-    // this.worker.postMessage(array);
-    // this.workers.forEach(({ worker }, i) => {
-    //   worker.postMessage(array[i]);
-    // });
-  }
+    return new Promise(async (parentResolve, parentReject) => {
+      try {
+        const workers = [...this.workers];
+        const results = await Promise.all(
+          array.map(
+            (chunk, i) =>
+              new Promise((childResolve, childReject) => {
+                const wrappedWorker = workers[i][1];
+                wrappedWorker.wrapper.addResolve(childResolve);
+                wrappedWorker.wrapper.addReject(childReject);
+                wrappedWorker.wrapper.worker.postMessage(chunk);
+              })
+          )
+        );
 
-  doWork(array) {
-    return new Promise((resolve, reject) => {
-      this.wrappedWorker.addReject(reject);
-      this.wrappedWorker.addResolve(resolve);
-      this.wrappedWorker.worker.postMessage(array);
+        parentResolve(results);
+      } catch (err) {
+        parentReject(err);
+      }
     });
   }
 
