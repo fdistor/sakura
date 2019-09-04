@@ -7,8 +7,10 @@ module.exports = class Pool {
 		this.timeout = timeout || 60000; // default to 60s
 		this.workersInProgress = size;
 		this.startTime = null;
+		this.timeoutTime = null;
 		this.stopTime = null;
 		this.finished = [];
+		this.timedOut = [];
 
 		this.addWorkers(size);
 	}
@@ -41,6 +43,15 @@ module.exports = class Pool {
 
 		this.finished.push(worker);
 		this.workersInProgress--;
+	}
+
+	stopAllWorkers() {
+		this.workers.forEach(worker => {
+			if (worker.status === 'WORKING') {
+				worker.status = 'TIMEOUT';
+				this.timedOut.push(worker);
+			}
+		});
 	}
 
 	work(array) {
@@ -94,6 +105,7 @@ module.exports = class Pool {
 
 	startTimer() {
 		this.startTime = Date.now();
+		this.timeoutTime = this.startTime + this.timeout;
 	}
 
 	stopTimer() {

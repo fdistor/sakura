@@ -5,9 +5,10 @@ const Data = require('../data/Data.js');
 const run = async () => {
 	const pool = new Pool(10, workerPath, null);
 	const stream = new Data();
+
 	pool.startTimer();
 
-	while (pool.workersInProgress) {
+	while (pool.workersInProgress && Date.now() < pool.timeoutTime) {
 		const data = stream.data();
 		const array = data.split(' ');
 		const result = await pool.work(array);
@@ -16,7 +17,15 @@ const run = async () => {
 	}
 
 	pool.stopTimer();
-	console.log(pool.finished, pool.stopTime - pool.startTime);
+	pool.stopAllWorkers();
+
+	console.log(
+		'FINISHED: ',
+		pool.finished,
+		'\n\n\nTIMEDOUT: ',
+		pool.timedOut,
+		pool.stopTime - pool.startTime
+	);
 };
 
 run()
