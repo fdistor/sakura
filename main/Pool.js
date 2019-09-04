@@ -16,8 +16,10 @@ module.exports = class Pool {
 	addWorkers(size) {
 		while (size) {
 			const wrapper = new Wrapper(this.workerPath);
+			const id = wrapper.worker.threadId;
 
-			this.workers.set(wrapper.worker.threadId, {
+			this.workers.set(id, {
+				id,
 				wrapper,
 				read: 0,
 				elapsed: 0,
