@@ -5,9 +5,9 @@ module.exports = class Pool {
 		this.workers = new Map();
 		this.workerPath = workerPath;
 		this.timeout = timeout || 60000; // default to 60s
-		this.workingWorkers = size;
-		this.start = null;
-		this.wrappedWorker = new Wrapper(workerPath);
+		this.workersInProgress = size;
+		this.startTime = null;
+		this.stopTime = null;
 		this.finished = [];
 
 		this.addWorkers(size);
@@ -31,29 +31,35 @@ module.exports = class Pool {
 		return this.workers.get(id);
 	}
 
-	stopWorker(id) {
-		const elapsed = Date.now() - this.start;
-		const workerInfo = this.getWorker(id);
+	stopWorker(worker) {
+		worker.elapsed = Date.now() - this.startTime;
+		worker.status = 'STOPPED';
 
-		workerInfo.elapsed = elapsed;
-		workerInfo.status = 'STOPPED';
+		worker.wrapper.worker.terminate();
 
-		this.workers.set(id, workerInfo);
-		worker.terminate();
+		this.finished.push(worker);
+		this.workersInProgress--;
 	}
 
 	work(array) {
 		return new Promise(async (parentResolve, parentReject) => {
 			try {
-				const workers = [...this.workers];
+				const workers = this.workers.values();
 				const results = await Promise.all(
 					array.map(
 						(chunk, i) =>
 							new Promise((childResolve, childReject) => {
-								const { wrapper } = workers[i][1];
-								wrapper.addResolve(childResolve);
-								wrapper.addReject(childReject);
-								wrapper.worker.postMessage(chunk);
+								const { wrapper, status } = workers.next().value;
+								if (status === 'WORKING') {
+									wrapper.addResolve(childResolve);
+									wrapper.addReject(childReject);
+									wrapper.worker.postMessage({
+										chunk,
+										id: wrapper.worker.threadId
+									});
+								} else {
+									childResolve(null);
+								}
 							})
 					)
 				);
@@ -65,7 +71,30 @@ module.exports = class Pool {
 		});
 	}
 
-	countBytes(string) {
-		return encodeURI(string).split(/%..|./).length - 1;
+	updateWorkerInfo(array) {
+		array.forEach(data => {
+			if (data) {
+				const { didFind, id, bytes } = data;
+				const worker = this.getWorker(id);
+
+				this.updateBytesReadOfWorker(bytes, worker);
+
+				if (didFind) {
+					this.stopWorker(worker);
+				}
+			}
+		});
+	}
+
+	updateBytesReadOfWorker(bytes, worker) {
+		worker.read += bytes;
+	}
+
+	startTimer() {
+		this.startTime = Date.now();
+	}
+
+	stopTimer() {
+		this.stopTime = Date.now();
 	}
 };

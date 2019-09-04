@@ -3,23 +3,24 @@ const Pool = require('./Pool.js');
 const Data = require('../data/Data.js');
 
 const run = async () => {
-  const start = Date.now();
-  const pool = new Pool(10, workerPath, null);
-  const stream = new Data();
-  let count = 10;
+	const pool = new Pool(10, workerPath, null);
+	const stream = new Data();
+	let count = 3;
 
-  // console.log(pool.workers);
+	pool.startTimer();
 
-  while (count) {
-    console.log(count, 'index.js');
-    const data = stream.data();
-    const array = data.split(' ');
-    const result = await pool.work(array);
-    console.log(result, 'index.js');
-    count--;
-  }
+	while (pool.workersInProgress) {
+		const data = stream.data();
+		const array = data.split(' ');
+		const result = await pool.work(array);
+
+		pool.updateWorkerInfo(result);
+	}
+
+	pool.stopTimer();
+	console.log(pool.finished, pool.stopTime - pool.startTime);
 };
 
 run()
-  .catch(err => console.error(err))
-  .then(() => console.log('done'));
+	.catch(err => console.error(err))
+	.then(() => console.log('done'));
