@@ -5,8 +5,6 @@ const Data = require('../data/Data.js');
 const run = async () => {
 	const pool = new Pool(10, workerPath, null);
 	const stream = new Data();
-	let count = 3;
-
 	pool.startTimer();
 
 	while (pool.workersInProgress) {
