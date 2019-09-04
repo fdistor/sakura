@@ -1,14 +1,9 @@
 const { parentPort } = require('worker_threads');
 
-const compare = string => {
-  return string === 'FiCo';
-};
-
-let result;
-
-parentPort.on('message', data => {
-  console.log(data);
-  result = compare(data);
+parentPort.on('message', message => {
+  if (message === 'FiCo') {
+    parentPort.postMessage('found');
+  } else {
+    parentPort.postMessage('not found');
+  }
 });
-
-parentPort.postMessage(result);

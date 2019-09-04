@@ -2,23 +2,21 @@ const workerPath = __dirname + '/workers/fico.js';
 const Pool = require('./Pool.js');
 const Data = require('../data/Data.js');
 
-const searchFiCo = () => {
-  return new Promise(async (parentResolve, parentReject) => {
-    const start = Date.now();
-    const pool = new Pool(10, workerPath, null);
-    const stream = new Data().stream();
+const run = async () => {
+  const start = Date.now();
+  const pool = new Pool(10, workerPath, null);
+  const stream = new Data();
+  let count = 10;
 
-    const iterator = generator => {
-      for (const item of generator) {
-        const words = item.split(' ');
-        // const load = Math.ceil(words.length / workerCount);
+  // console.log(pool.workers);
 
-        pool.work(words);
-      }
-    };
-
-    iterator(stream);
-  });
+  while (count) {
+    const data = stream.data();
+    const result = await pool.doWork(data);
+    count--;
+  }
 };
 
-searchFiCo();
+run()
+  .catch(err => console.error(err))
+  .then(() => console.log('done'));

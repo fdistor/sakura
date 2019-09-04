@@ -1,27 +1,27 @@
 {
-	"name": "sakura",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"data": "node data/script/generate.js",
-		"start": "node --experimental-worker src/main.js"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/fdistor/sakura.git"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/fdistor/sakura/issues"
-	},
-	"homepage": "https://github.com/fdistor/sakura#readme",
-	"devDependencies": {
-		"faker": "^4.1.0",
-		"inquirer": "^7.0.0",
-		"ora": "^3.4.0"
-	}
+  "name": "sakura",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "data": "node data/script/generate.js",
+    "start": "node --experimental-worker main/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fdistor/sakura.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fdistor/sakura/issues"
+  },
+  "homepage": "https://github.com/fdistor/sakura#readme",
+  "devDependencies": {
+    "faker": "^4.1.0",
+    "inquirer": "^7.0.0",
+    "ora": "^3.4.0"
+  }
 }

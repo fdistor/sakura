@@ -1,4 +1,4 @@
-const { Worker, parentPort } = require('worker_threads');
+const Wrapper = require('./Wrapper.js');
 
 module.exports = class Pool {
   constructor(size, workerPath, timeout) {
@@ -7,15 +7,17 @@ module.exports = class Pool {
     this.timeout = timeout || 60000; // default to 60s
     this.workingWorkers = size;
     this.start = null;
+    this.wrappedWorker = new Wrapper(workerPath);
 
     this.addWorkers(size);
   }
 
   addWorkers(size) {
     while (size) {
-      const worker = new Worker(this.workerPath);
-      this.workers.set(worker.threadId, {
-        worker,
+      const wrapper = new Wrapper(this.workerPath);
+
+      this.workers.set(wrapper.worker.threadId, {
+        wrapper,
         read: 0,
         elapsed: 0,
         status: 'WORKING'
@@ -40,16 +42,17 @@ module.exports = class Pool {
   }
 
   work(array) {
-    this.workers.forEach(({ worker }, i) => {
-      worker.postMessage(array[i]);
+    // this.worker.postMessage(array);
+    // this.workers.forEach(({ worker }, i) => {
+    //   worker.postMessage(array[i]);
+    // });
+  }
 
-      worker.on('message', result => {
-        if (result === 'FiCo') this.stopWorker(worker.threadId);
-      });
-      worker.on('error', console.log('error'));
-      worker.on('exit', code => {
-        if (code !== 0) this.stopWorker(worker.threadId);
-      });
+  doWork(array) {
+    return new Promise((resolve, reject) => {
+      this.wrappedWorker.addReject(reject);
+      this.wrappedWorker.addResolve(resolve);
+      this.wrappedWorker.worker.postMessage(array);
     });
   }
 
