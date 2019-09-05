@@ -19,6 +19,7 @@ const run = async () => {
   pool.stopTimer();
   pool.stopAllWorkersOnTimeout();
   pool.getAverageBytesPerNanosecond();
+  pool.formatSuccessfulWorkerInfo();
 
   console.log(
     'FINISHED: ',
@@ -26,7 +27,8 @@ const run = async () => {
     '\n\n\nTIMEDOUT: ',
     pool.timedOut,
     pool.stopTime - pool.startTime,
-    pool.averageBytesPerNanosecond
+    // pool.averageBytesPerNanosecond
+    pool.logToStdout
   );
 };
 
