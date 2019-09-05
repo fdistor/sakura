@@ -16,6 +16,9 @@ module.exports = class Pool {
     this.totalTimeElapsed = 0;
     this.averageBytesPerMs = null;
     this.logToStdout = [];
+    this.longestByteLength = 0;
+    this.longestTimeLength = 0;
+    this.longestIdLength = 0;
 
     this.addWorkers(size);
   }
@@ -156,19 +159,31 @@ module.exports = class Pool {
       const elapsedLength = String(elapsed).length;
       const idLength = String(id).length;
 
-      longestByteLength = Math.max(readLength, longestByteLength);
-      longestTimeLength = Math.max(elapsedLength, longestTimeLength);
-      longestIdLength = Math.max(idLength, longestIdLength);
+      this.longestByteLength = Math.max(readLength, this.longestByteLength);
+      this.longestTimeLength = Math.max(elapsedLength, this.longestTimeLength);
+      this.longestIdLength = Math.max(idLength, this.longestIdLength);
     });
 
     this.successful.forEach(worker => {
       const { read, elapsed, id } = worker;
 
-      worker.read = this.padSpaces(read, longestByteLength);
-      worker.elapsed = this.padSpaces(elapsed, longestTimeLength);
-      worker.id = this.padSpaces(id, longestIdLength);
+      worker.read = this.padSpaces(read, this.longestByteLength);
+      worker.elapsed = this.padSpaces(elapsed, this.longestTimeLength);
+      worker.id = this.padSpaces(id, this.longestIdLength);
     });
+  }
 
+  formatUnsuccessfulWorkerInfo(array) {
+    array.forEach(worker => {
+      const { id } = worker;
+
+      worker.read = this.padSpaces('', this.longestByteLength);
+      worker.elapsed = this.padSpaces('', this.longestTimeLength);
+      worker.id = this.padSpaces(id, this.longestIdLength);
+    });
+  }
+
+  pushSuccessfulToStdout() {
     for (let i = this.successful.length - 1; i >= 0; i--) {
       const { read, elapsed, id } = this.successful[i];
       const result = `${elapsed} ${read} ${id}`;
@@ -177,13 +192,31 @@ module.exports = class Pool {
     }
   }
 
-  padSpaces(num, maxLength) {
-    let result = String(num);
+  pushUnsuccessfulStdout(array) {
+    array.forEach(({ read, elapsed, id }) => {
+      const result = `${read} ${elapsed} ${id}`;
+
+      this.logToStdout.push(result);
+    });
+  }
+
+  padSpaces(input, maxLength) {
+    let result = String(input);
 
     while (result.length < maxLength) {
       result = result + ' ';
     }
 
     return result;
+  }
+
+  logToConsole() {
+    this.getAverageBytesPerNanosecond();
+    this.formatSuccessfulWorkerInfo();
+    this.pushSuccessfulToStdout();
+    this.formatUnsuccessfulWorkerInfo(this.erroredOut);
+    this.formatUnsuccessfulWorkerInfo(this.timedOut);
+    this.pushUnsuccessfulStdout(this.erroredOut);
+    this.pushUnsuccessfulStdout(this.timedOut);
   }
 };

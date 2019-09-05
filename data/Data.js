@@ -35,7 +35,7 @@ module.exports = class StreamData {
   }
 
   data() {
-    const random = this.rng(1000);
+    const random = this.rng(100);
     if (random === 0) {
       let length = 9;
       let left = this.rng(10);

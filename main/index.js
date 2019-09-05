@@ -3,7 +3,7 @@ const Pool = require('./Pool.js');
 const Data = require('../data/Data.js');
 
 const run = async () => {
-  const pool = new Pool(10, workerPath, null);
+  const pool = new Pool(10, workerPath, 200);
   const stream = new Data();
 
   pool.startTimer();
@@ -20,16 +20,11 @@ const run = async () => {
   pool.stopAllWorkersOnTimeout();
   pool.getAverageBytesPerNanosecond();
   pool.formatSuccessfulWorkerInfo();
+  pool.pushSuccessfulToStdout();
 
-  console.log(
-    'FINISHED: ',
-    pool.successful,
-    '\n\n\nTIMEDOUT: ',
-    pool.timedOut,
-    pool.stopTime - pool.startTime,
-    // pool.averageBytesPerNanosecond
-    pool.logToStdout
-  );
+  pool.logToConsole();
+
+  console.log();
 };
 
 run()
