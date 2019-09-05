@@ -10,8 +10,9 @@ module.exports = class Wrapper {
 			this.resolve(result);
 			this.removeResolveAndReject();
 		});
-		this.worker.on('error', err => {
-			this.reject(err);
+		this.worker.on('error', error => {
+			const id = this.worker.threadId;
+			this.reject({ error, id });
 			this.removeResolveAndReject();
 		});
 	}

@@ -11,6 +11,7 @@ module.exports = class Pool {
 		this.stopTime = null;
 		this.finished = [];
 		this.timedOut = [];
+		this.erroredOut = [];
 
 		this.addWorkers(size);
 	}
@@ -42,6 +43,16 @@ module.exports = class Pool {
 		worker.wrapper.worker.terminate();
 
 		this.finished.push(worker);
+		this.workersInProgress--;
+	}
+
+	stopWorkerOnError(id) {
+		const worker = this.getWorker(id);
+
+		worker.elapsed = Date.now() - this.startTime;
+		worker.status = 'FAILURE';
+
+		this.erroredOut.push(worker);
 		this.workersInProgress--;
 	}
 
@@ -87,7 +98,7 @@ module.exports = class Pool {
 
 	updateWorkerInfo(array) {
 		array.forEach(data => {
-			if (data instanceof Error) {
+			if (data.error) {
 			} else if (data) {
 				const { didFind, id, bytes } = data;
 				const worker = this.getWorker(id);
