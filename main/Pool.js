@@ -211,7 +211,7 @@ module.exports = class Pool {
     return result;
   }
 
-  logToConsole() {
+  printToStdout() {
     this.getAverageBytesPerMillisecond();
 
     this.findLongestString('longestByteLength', this.successful, 'read');

@@ -19,7 +19,7 @@ const run = async () => {
   pool.stopTimer();
   pool.stopAllWorkersOnTimeout();
 
-  pool.logToConsole();
+  pool.printToStdout();
 };
 
 run().catch(err => console.error(err));
