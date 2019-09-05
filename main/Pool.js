@@ -9,7 +9,7 @@ module.exports = class Pool {
 		this.startTime = null;
 		this.timeoutTime = null;
 		this.stopTime = null;
-		this.finished = [];
+		this.successful = [];
 		this.timedOut = [];
 		this.erroredOut = [];
 
@@ -43,7 +43,7 @@ module.exports = class Pool {
 
 		worker.wrapper.worker.terminate();
 
-		this.finished.push(worker);
+		this.successful.push(worker);
 		this.workersInProgress--;
 	}
 
