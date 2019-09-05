@@ -60,7 +60,7 @@ module.exports = class Pool {
 				const workers = this.workers.values();
 				const results = await Promise.all(
 					array.map(
-						(chunk, i) =>
+						chunk =>
 							new Promise((childResolve, childReject) => {
 								const { wrapper, status } = workers.next().value;
 								if (status === 'WORKING') {

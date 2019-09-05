@@ -6,10 +6,8 @@ module.exports = class Wrapper {
 		this.resolve = null;
 		this.reject = null;
 
-		this.worker.on('message', result => {
-			this.resolve(result);
-		});
-		this.worker.on('error', () => console.log('error'));
+		this.worker.on('message', result => this.resolve(result));
+		this.worker.on('error', err => this.reject(err));
 		this.worker.on('exit', code => {
 			if (code !== 0) this.reject(code);
 		});
