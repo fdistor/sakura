@@ -6,10 +6,13 @@ module.exports = class Wrapper {
 		this.resolve = null;
 		this.reject = null;
 
-		this.worker.on('message', result => this.resolve(result));
-		this.worker.on('error', err => this.reject(err));
-		this.worker.on('exit', code => {
-			if (code !== 0) this.reject(code);
+		this.worker.on('message', result => {
+			this.resolve(result);
+			this.removeResolveAndReject();
+		});
+		this.worker.on('error', err => {
+			this.reject(err);
+			this.removeResolveAndReject();
 		});
 	}
 
@@ -21,11 +24,8 @@ module.exports = class Wrapper {
 		this.reject = reject;
 	}
 
-	removeResolve() {
+	removeResolveAndReject() {
 		this.resolve = null;
-	}
-
-	removeReject() {
 		this.reject = null;
 	}
 };

@@ -87,7 +87,8 @@ module.exports = class Pool {
 
 	updateWorkerInfo(array) {
 		array.forEach(data => {
-			if (data) {
+			if (data instanceof Error) {
+			} else if (data) {
 				const { didFind, id, bytes } = data;
 				const worker = this.getWorker(id);
 
