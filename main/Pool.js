@@ -100,7 +100,7 @@ module.exports = class Pool {
 
 	updateWorkerInfo(array) {
 		array.forEach(data => {
-			if (data.error) {
+			if (data && data.error) {
 				const { id, error } = data;
 
 				this.stopWorkerOnError(id, error);

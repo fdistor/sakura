@@ -21,7 +21,7 @@ const run = async () => {
 
 	console.log(
 		'FINISHED: ',
-		pool.finished,
+		pool.successful,
 		'\n\n\nTIMEDOUT: ',
 		pool.timedOut,
 		pool.stopTime - pool.startTime
