@@ -18,13 +18,15 @@ const run = async () => {
 
 	pool.stopTimer();
 	pool.stopAllWorkersOnTimeout();
+	pool.getAverageBytesPerNanosecond();
 
 	console.log(
 		'FINISHED: ',
 		pool.successful,
 		'\n\n\nTIMEDOUT: ',
 		pool.timedOut,
-		pool.stopTime - pool.startTime
+		pool.stopTime - pool.startTime,
+		pool.averageBytesPerNanosecond
 	);
 };
 

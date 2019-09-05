@@ -12,6 +12,9 @@ module.exports = class Pool {
 		this.successful = [];
 		this.timedOut = [];
 		this.erroredOut = [];
+		this.totalBytesRead = 0;
+		this.totalTimeElapsed = 0;
+		this.averageBytesPerNanosecond = null;
 
 		this.addWorkers(size);
 	}
@@ -128,5 +131,18 @@ module.exports = class Pool {
 
 	stopTimer() {
 		this.stopTime = Date.now();
+	}
+
+	getAverageBytesPerNanosecond() {
+		this.successful.forEach(worker => {
+			const { read, elapsed } = worker;
+
+			this.totalBytesRead += read;
+			this.totalTimeElapsed += elapsed;
+		});
+
+		this.averageBytesPerNanosecond = Math.floor(
+			this.totalBytesRead / this.totalTimeElapsed
+		);
 	}
 };
