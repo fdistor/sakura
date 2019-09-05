@@ -232,4 +232,12 @@ module.exports = class Pool {
 
     console.log(result);
   }
+
+  printToStderr() {
+    this.erroredOut.forEach(worker => {
+      const message = `Thread ${worker.id} exited with error ${worker.error}`;
+
+      console.error(message);
+    });
+  }
 };
