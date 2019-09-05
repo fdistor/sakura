@@ -42,7 +42,7 @@ module.exports = class Pool {
   }
 
   stopWorkerOnSuccess(worker) {
-    worker.elapsed = this.convertNanoToMilli(Date.now() - this.startTime);
+    worker.elapsed = Date.now() - this.startTime;
     worker.status = 'STOPPED';
 
     worker.wrapper.worker.terminate();
@@ -175,10 +175,6 @@ module.exports = class Pool {
 
       this.logToStdout.push(result);
     }
-  }
-
-  convertNanoToMilli(num) {
-    return num * 1e-6;
   }
 
   padSpaces(num, maxLength) {
