@@ -136,7 +136,7 @@ module.exports = class Pool {
     this.stopTime = Date.now();
   }
 
-  getAverageBytesPerNanosecond() {
+  getAverageBytesPerMillisecond() {
     this.successful.forEach(worker => {
       const { read, elapsed } = worker;
 
@@ -144,26 +144,21 @@ module.exports = class Pool {
       this.totalTimeElapsed += elapsed;
     });
 
-    this.averageBytesPerNanosecond = Math.floor(
+    this.averageBytesPerMs = Math.floor(
       this.totalBytesRead / this.totalTimeElapsed
     );
   }
 
-  formatSuccessfulWorkerInfo() {
-    let longestByteLength = 0;
-    let longestTimeLength = 0;
-    let longestIdLength = 0;
+  findLongestString(ref, array, property) {
+    array.forEach(worker => {
+      const value = worker[property];
+      const valueLength = String(value).length;
 
-    this.successful.forEach(({ read, elapsed, id }) => {
-      const readLength = String(read).length;
-      const elapsedLength = String(elapsed).length;
-      const idLength = String(id).length;
-
-      this.longestByteLength = Math.max(readLength, this.longestByteLength);
-      this.longestTimeLength = Math.max(elapsedLength, this.longestTimeLength);
-      this.longestIdLength = Math.max(idLength, this.longestIdLength);
+      this[ref] = Math.max(valueLength, this[ref]);
     });
+  }
 
+  formatSuccessfulWorkerInfo() {
     this.successful.forEach(worker => {
       const { read, elapsed, id } = worker;
 
@@ -192,12 +187,18 @@ module.exports = class Pool {
     }
   }
 
-  pushUnsuccessfulStdout(array) {
+  pushUnsuccessfulToStdout(array) {
     array.forEach(({ read, elapsed, id }) => {
       const result = `${read} ${elapsed} ${id}`;
 
       this.logToStdout.push(result);
     });
+  }
+
+  pushAverageBPMsToStdout() {
+    const result = `Avg B/ms ${this.averageBytesPerMs}`;
+
+    this.logToStdout.push(result);
   }
 
   padSpaces(input, maxLength) {
@@ -211,12 +212,24 @@ module.exports = class Pool {
   }
 
   logToConsole() {
-    this.getAverageBytesPerNanosecond();
+    this.getAverageBytesPerMillisecond();
+
+    this.findLongestString('longestByteLength', this.successful, 'read');
+    this.findLongestString('longestIdLength', this.workers, 'id');
+    this.findLongestString('longestTimeLength', this.successful, 'elapsed');
+
     this.formatSuccessfulWorkerInfo();
     this.pushSuccessfulToStdout();
+
     this.formatUnsuccessfulWorkerInfo(this.erroredOut);
     this.formatUnsuccessfulWorkerInfo(this.timedOut);
-    this.pushUnsuccessfulStdout(this.erroredOut);
-    this.pushUnsuccessfulStdout(this.timedOut);
+    this.pushUnsuccessfulToStdout(this.erroredOut);
+    this.pushUnsuccessfulToStdout(this.timedOut);
+
+    this.pushAverageBPMsToStdout();
+
+    const result = this.logToStdout.join('\n');
+
+    console.log(result);
   }
 };
