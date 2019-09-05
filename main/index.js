@@ -1,9 +1,13 @@
 const workerPath = __dirname + '/workers/fico.js';
 const Pool = require('./Pool.js');
 const Data = require('../data/Data.js');
+const inquirer = require('inquirer');
 
-const run = async () => {
-  const pool = new Pool(10, workerPath, 300);
+const run = async timeout => {
+  if (isNaN(Number(timeout))) timeout = 60000;
+  else timeout = Number(timeout);
+
+  const pool = new Pool(10, workerPath, timeout);
   const stream = new Data();
 
   pool.startTimer();
@@ -23,4 +27,13 @@ const run = async () => {
   pool.printToStderr();
 };
 
-run().catch(err => console.error(err));
+const question = [
+  {
+    type: 'input',
+    name: 'timeout',
+    message: 'Please input an integer (in ms) for the timeout value.',
+    default: 60000
+  }
+];
+
+inquirer.prompt(question).then(({ timeout }) => run(timeout));
