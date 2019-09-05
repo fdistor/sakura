@@ -63,6 +63,7 @@ module.exports = class Pool {
 						chunk =>
 							new Promise((childResolve, childReject) => {
 								const { wrapper, status } = workers.next().value;
+
 								if (status === 'WORKING') {
 									wrapper.addResolve(childResolve);
 									wrapper.addReject(childReject);
