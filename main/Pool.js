@@ -14,7 +14,7 @@ module.exports = class Pool {
     this.erroredOut = [];
     this.totalBytesRead = 0;
     this.totalTimeElapsed = 0;
-    this.averageBytesPerNanosecond = null;
+    this.averageBytesPerMs = null;
     this.logToStdout = [];
 
     this.addWorkers(size);
