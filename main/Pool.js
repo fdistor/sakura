@@ -37,7 +37,7 @@ module.exports = class Pool {
 		return this.workers.get(id);
 	}
 
-	stopWorker(worker) {
+	stopWorkerOnSuccess(worker) {
 		worker.elapsed = Date.now() - this.startTime;
 		worker.status = 'STOPPED';
 
@@ -111,7 +111,7 @@ module.exports = class Pool {
 				this.updateBytesReadOfWorker(bytes, worker);
 
 				if (didFind) {
-					this.stopWorker(worker);
+					this.stopWorkerOnSuccess(worker);
 				}
 			}
 		});
