@@ -60,6 +60,8 @@ module.exports = class Pool {
     worker.status = 'FAILURE';
     worker.error = error;
 
+    worker.wrapper.worker.terminate();
+
     this.erroredOut.push(worker);
     this.workersInProgress--;
   }
@@ -68,6 +70,7 @@ module.exports = class Pool {
     this.workers.forEach(worker => {
       if (worker.status === 'WORKING') {
         worker.status = 'TIMEOUT';
+        worker.wrapper.worker.terminate();
         this.timedOut.push(worker);
       }
     });

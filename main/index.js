@@ -35,5 +35,3 @@ const question = [
     default: 60000
   }
 ];
-
-inquirer.prompt(question).then(({ timeout }) => run(timeout));
