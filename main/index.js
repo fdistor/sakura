@@ -17,7 +17,7 @@ const run = async () => {
 	}
 
 	pool.stopTimer();
-	pool.stopAllWorkers();
+	pool.stopAllWorkersOnTimeout();
 
 	console.log(
 		'FINISHED: ',

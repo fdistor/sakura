@@ -58,7 +58,7 @@ module.exports = class Pool {
 		this.workersInProgress--;
 	}
 
-	stopAllWorkers() {
+	stopAllWorkersOnTimeout() {
 		this.workers.forEach(worker => {
 			if (worker.status === 'WORKING') {
 				worker.status = 'TIMEOUT';
