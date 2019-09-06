@@ -1,6 +1,6 @@
 # Multithreaded String Search
 
-This is a node application that searches for the string "FiCo" in an infinite stream of data."
+This is a node application that searches for the string "FiCo" in an infinite stream of data.
 
 ## Prerequisites
 
