@@ -1,12 +1,8 @@
 const faker = require('faker');
 
 module.exports = class StreamData {
-  constructor() {
-    this.didWorkersFinish = false;
-  }
-
   data() {
-    const random = this.rng(10000);
+    const random = this.rng(5000);
     if (random === 0) {
       let length = 9;
       let left = this.rng(10);
