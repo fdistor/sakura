@@ -1,3 +1,5 @@
+#!/usr/bin/env node --experimental-worker
+
 const workerPath = __dirname + '/workers/fico.js';
 const Pool = require('./Pool.js');
 const Data = require('../data/Data.js');
@@ -37,4 +39,18 @@ const question = [
   }
 ];
 
-inquirer.prompt(question).then(({ timeout }) => run(timeout));
+const execute = () => {
+  const args = process.argv.slice(2);
+  if (args.length) {
+    args.forEach(arg => {
+      if (arg === '-h')
+        console.log(
+          'To start the program, at the root of the project, run `main/index.js` in the terminal and enter a number when prompted to set the timeout.'
+        );
+    });
+  } else {
+    inquirer.prompt(question).then(({ timeout }) => run(timeout));
+  }
+};
+
+execute();
