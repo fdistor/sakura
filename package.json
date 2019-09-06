@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --experimental-worker main/index.js",
-    "setup": "npm install && npm link && chmod +x $(pwd)/main/index.js",
-    "sudoSetup": "npm install && npm link && sudo chmod +x $(pwd)/main/index.js"
+    "setup": "chmod +x $(pwd)/main/index.js",
+    "sudoSetup": "sudo chmod +x $(pwd)/main/index.js"
   },
   "repository": {
     "type": "git",
