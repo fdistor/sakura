@@ -37,9 +37,7 @@ const execute = () => {
         'To start the program, at the root of the project, run `sakura [timeout]` where [timeout] is an integer in milliseconds that determines how long the program will run.\n No integer input will default to 60000ms.'
       );
     else run(arg);
-  } else {
-    run(60000);
-  }
+  } else run(60000);
 };
 
 execute();
