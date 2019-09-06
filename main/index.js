@@ -1,8 +1,8 @@
 #!/usr/bin/env node --experimental-worker
 
 const workerPath = __dirname + '/workers/fico.js';
-const Pool = require('./Pool.js');
-const Data = require('../data/Data.js');
+const Pool = require('./classes/Pool.js');
+const Data = require('./data/Data.js');
 
 const run = async timeout => {
   if (isNaN(Number(timeout))) timeout = 60000;
