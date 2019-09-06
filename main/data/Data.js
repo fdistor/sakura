@@ -2,11 +2,11 @@ const faker = require('faker');
 
 module.exports = class Data {
   data() {
-    const random = this.rng(5000);
+    const random = this.rng(50000);
+
     if (random === 0) {
-      let length = 9;
-      let left = this.rng(10);
-      let right = length - left;
+      let left = this.rng(100);
+      let right = 100 - left;
       const wordArray = [];
 
       while (left > 0) {
@@ -20,8 +20,9 @@ module.exports = class Data {
         wordArray.push(faker.lorem.word());
         right--;
       }
-      return wordArray.join(' ');
-    } else return faker.lorem.words(10);
+
+      return wordArray.join('');
+    } else return faker.lorem.paragraph(this.rng(5));
   }
 
   rng(max) {

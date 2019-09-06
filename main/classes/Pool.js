@@ -3,6 +3,7 @@ const Wrapper = require('./Wrapper.js');
 module.exports = class Pool {
   constructor(size, workerPath, timeout) {
     this.workers = new Map();
+    this.workingWorkers = new Set();
     this.workerPath = workerPath;
     this.timeout = timeout || 60000; // default to 60s
     this.workersInProgress = size;
@@ -36,6 +37,9 @@ module.exports = class Pool {
         status: 'WORKING',
         error: null
       });
+
+      this.workingWorkers.add(id);
+
       size--;
     }
   }
@@ -51,6 +55,7 @@ module.exports = class Pool {
     worker.wrapper.worker.terminate();
 
     this.successful.push(worker);
+    this.workingWorkers.delete(worker.id);
     this.workersInProgress--;
   }
 
@@ -63,6 +68,7 @@ module.exports = class Pool {
     worker.wrapper.worker.terminate();
 
     this.erroredOut.push(worker);
+    this.workingWorkers.delete(worker.id);
     this.workersInProgress--;
   }
 
@@ -74,6 +80,7 @@ module.exports = class Pool {
         worker.wrapper.worker.terminate();
 
         this.timedOut.push(worker);
+        this.workingWorkers.delete(worker.id);
       }
     });
   }
@@ -81,12 +88,13 @@ module.exports = class Pool {
   work(array) {
     return new Promise(async (parentResolve, parentReject) => {
       try {
-        const workers = this.workers.values();
+        const workers = this.workingWorkers.values();
         const results = await Promise.all(
           array.map(
             chunk =>
               new Promise((childResolve, childReject) => {
-                const { wrapper, status } = workers.next().value;
+                const nextWorker = workers.next().value;
+                const { wrapper, status } = this.getWorker(nextWorker);
 
                 if (status === 'WORKING') {
                   wrapper.addResolve(childResolve);

@@ -15,7 +15,16 @@ const run = async timeout => {
 
   while (pool.workersInProgress && Date.now() < pool.timeoutTime) {
     const data = stream.data();
-    const array = data.split(' ');
+    const load = Math.ceil(data.length / pool.workersInProgress);
+    const array = Array.from(new Array(pool.workersInProgress));
+
+    array.forEach((el, index) => {
+      const start = index * load;
+      const end = start + load + 3;
+
+      array[index] = data.slice(start, end);
+    });
+
     const result = await pool.work(array);
 
     pool.updateWorkerInfo(result);
