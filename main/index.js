@@ -3,7 +3,6 @@
 const workerPath = __dirname + '/workers/fico.js';
 const Pool = require('./Pool.js');
 const Data = require('../data/Data.js');
-const inquirer = require('inquirer');
 
 const run = async timeout => {
   if (isNaN(Number(timeout))) timeout = 60000;
@@ -29,15 +28,6 @@ const run = async timeout => {
   pool.printToStderr();
 };
 
-const question = [
-  {
-    type: 'input',
-    name: 'timeout',
-    message: 'Please input an integer (in ms) for the timeout value.',
-    default: 60000
-  }
-];
-
 const execute = () => {
   const args = process.argv.slice(2);
   if (args.length) {
@@ -46,9 +36,10 @@ const execute = () => {
         console.log(
           'To start the program, at the root of the project, run `main/index.js` in the terminal and enter a number when prompted to set the timeout.'
         );
+      else run(arg);
     });
   } else {
-    inquirer.prompt(question).then(({ timeout }) => run(timeout));
+    run(60000);
   }
 };
 

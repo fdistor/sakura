@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/fdistor/sakura#readme",
   "devDependencies": {
-    "faker": "^4.1.0",
-    "inquirer": "^7.0.0"
+    "faker": "^4.1.0"
   }
 }
