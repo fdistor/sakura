@@ -4,7 +4,6 @@ const workerPath = __dirname + '/workers/fico.js';
 const Pool = require('./Pool.js');
 const Data = require('../data/Data.js');
 const inquirer = require('inquirer');
-const ora = require('ora');
 
 const run = async timeout => {
   if (isNaN(Number(timeout))) timeout = 60000;
