@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "data": "node data/script/generate.js",
-    "start": "node --experimental-worker main/index.js"
+    "start": "node --experimental-worker main/index.js",
+    "setup": "npm install && npm link && sudo chmod +x $(pwd)/main/index.js",
+    "sudoSetup": "npm install && npm link && chmod +x $(pwd)/main/index.js"
   },
   "repository": {
     "type": "git",
@@ -15,6 +16,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bin": {
+    "sakura": "./main/index.js"
+  },
   "bugs": {
     "url": "https://github.com/fdistor/sakura/issues"
   },
