@@ -6,9 +6,9 @@ This is a node application that searches for the string "FiCo" in an infinite st
 
 - Node v10.5 or higher
 
-## Installation
+## Making the Executable
 
-- To make the executable, run `npm run setup` at the project root in a terminal to install dependencies and to make `./main/index.js` executable.
+- Run `npm run setup` at the project root in a terminal to install dependencies and to make `./main/index.js` executable.
 - If you encounter a permissions error, run `npm run sudoSetup` instead and input your system password.
 
 ## Running the Program
