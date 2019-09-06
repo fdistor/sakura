@@ -70,7 +70,9 @@ module.exports = class Pool {
     this.workers.forEach(worker => {
       if (worker.status === 'WORKING') {
         worker.status = 'TIMEOUT';
+
         worker.wrapper.worker.terminate();
+
         this.timedOut.push(worker);
       }
     });

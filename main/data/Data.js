@@ -1,6 +1,6 @@
 const faker = require('faker');
 
-module.exports = class StreamData {
+module.exports = class Data {
   data() {
     const random = this.rng(5000);
     if (random === 0) {
