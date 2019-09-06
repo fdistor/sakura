@@ -34,7 +34,7 @@ const execute = () => {
     args.forEach(arg => {
       if (arg === '-h')
         console.log(
-          'To start the program, at the root of the project, run `main/index.js` in the terminal and enter a number when prompted to set the timeout.'
+          'To start the program, at the root of the project, run `main/index.js [timeout]` in the terminal where [timeout] is an integer in milliseconds that determines how long the program will run.\n No integer input will default to 60000ms.'
         );
       else run(arg);
     });
