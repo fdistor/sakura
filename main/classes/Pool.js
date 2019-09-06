@@ -80,7 +80,6 @@ module.exports = class Pool {
         worker.wrapper.worker.terminate();
 
         this.timedOut.push(worker);
-        this.workingWorkers.delete(worker.id);
       }
     });
   }
