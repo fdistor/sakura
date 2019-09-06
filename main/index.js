@@ -29,15 +29,14 @@ const run = async timeout => {
 };
 
 const execute = () => {
-  const args = process.argv.slice(2);
-  if (args.length) {
-    args.forEach(arg => {
-      if (arg === '-h')
-        console.log(
-          'To start the program, at the root of the project, run `main/index.js [timeout]` in the terminal where [timeout] is an integer in milliseconds that determines how long the program will run.\n No integer input will default to 60000ms.'
-        );
-      else run(arg);
-    });
+  const arg = process.argv.slice(2)[0];
+
+  if (arg) {
+    if (arg === '-h')
+      console.log(
+        'To start the program, at the root of the project, run `sakura [timeout]` where [timeout] is an integer in milliseconds that determines how long the program will run.\n No integer input will default to 60000ms.'
+      );
+    else run(arg);
   } else {
     run(60000);
   }
